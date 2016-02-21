@@ -2,6 +2,7 @@ import os
 from gcm import GCM
 from os.path import join, dirname
 from dotenv import load_dotenv
+from model import Shopper, NotificationShopperFound, NotificationNewOrderAvailable, NotificationShopperVerified
 
 
 def create_gcm_client(api_key: str) -> GCM:
@@ -52,10 +53,14 @@ if __name__ == '__main__':
         if not gcm:
             print('cannot create gcm client')
         else:
-            registration_id = os.environ['REGISTRATION_ID']
-            data = {'param1': 'value1', 'param2': 'value2'}
+            shopper = Shopper(1, 'shopper_name', 'shopper_surname', 'http://photo.com/1')
+            notification_shopper_found = NotificationShopperFound('2015-10-25T22:34:51+00:00', shopper)
+            notification_new_order_available = NotificationNewOrderAvailable(1)
+            notification_shopper_verified = NotificationShopperVerified()
 
-            print('sending push message: {0}'.format(data))
-            res = send_push_message(gcm, [registration_id], data)
+            registration_id = os.environ['REGISTRATION_ID']
+
+            print('sending push message: {0}'.format(notification_shopper_found.as_dict()))
+            res = send_push_message(gcm, [registration_id], notification_shopper_found.as_dict())
 
             print('success: {0}'.format(res))
