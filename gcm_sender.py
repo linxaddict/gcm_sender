@@ -23,21 +23,6 @@ def send_push_message(gcm: GCM, registration_ids: [str], data: dict) -> bool:
     if 'success' not in response:
         return False
 
-    response = gcm.json_request(
-        registration_ids=registration_ids, data=data,
-        collapse_key='push_test', delay_while_idle=True, time_to_live=3600
-    )
-
-    if 'success' not in response:
-        return False
-
-    topic = 'push_test'
-
-    try:
-        gcm.send_topic_message(topic=topic, data=data)
-    except IOError:
-        return False
-
     return True
 
 if __name__ == '__main__':
@@ -60,7 +45,7 @@ if __name__ == '__main__':
 
             registration_id = os.environ['REGISTRATION_ID']
 
-            print('sending push message: {0}'.format(notification_shopper_found.as_dict()))
-            res = send_push_message(gcm, [registration_id], notification_shopper_found.as_dict())
+            print('sending push message: {0}'.format(notification_new_order_available.as_dict()))
+            res = send_push_message(gcm, [registration_id], notification_new_order_available.as_dict())
 
             print('success: {0}'.format(res))
